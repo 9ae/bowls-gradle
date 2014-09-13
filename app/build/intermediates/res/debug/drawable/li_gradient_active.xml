@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
+    <gradient
+        android:angle="0"
+        android:centerColor="@color/grapefruit"
+        android:startColor="@android:color/transparent"
+        android:endColor="@color/grapefruit"
+        android:type="linear" />
+</shape><!-- From: file:/Users/ari/AndroidStudioProjects/Bowls/app/src/main/res/drawable/li_gradient_active.xml -->

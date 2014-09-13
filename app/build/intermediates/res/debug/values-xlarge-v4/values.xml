@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- From: file:/Users/ari/AndroidStudioProjects/Bowls/app/src/main/res/values-xlarge/dimens.xml -->
+    <eat-comment />
+
+    <dimen name="activity_horizontal_margin">0dp</dimen>
+    <dimen name="activity_vertical_margin">0dp</dimen>
+    <dimen name="bill_line">40dp</dimen>
+    <dimen name="btn_radius">20dip</dimen>
+    <dimen name="button_size">100dp</dimen>
+    <dimen name="large_font">40dp</dimen>
+    <dimen name="line_icon">36dp</dimen>
+    <dimen name="line_text">27dp</dimen>
+    <dimen name="med_font">32dp</dimen>
+    <!-- From: file:/Users/ari/AndroidStudioProjects/Bowls/app/src/main/res/values-xlarge/strings.xml -->
+    <eat-comment />
+
+    <dimen name="number_buttons_margin">1dp</dimen>
+    <dimen name="number_buttons_size">10dp</dimen>
+    <!-- From: file:/Users/ari/AndroidStudioProjects/Bowls/app/src/main/res/values-xlarge/dimens.xml -->
+    <eat-comment />
+
+    <dimen name="pad">4dp</dimen>
+    <dimen name="pref_btn_h">106dp</dimen>
+    <dimen name="pref_btn_text">40sp</dimen>
+    <dimen name="pref_btn_w">300dp</dimen>
+    <dimen name="size_3rows">308dp</dimen>
+    <dimen name="small_font">24dp</dimen>
+    <dimen name="split_text">100sp</dimen>
+    <dimen name="subtotal_edit_btn">64dp</dimen>
+    <dimen name="tbtn">100dp</dimen>
+    <dimen name="tbtn_text">36sp</dimen>
+    <dimen name="xlarge_font">60dp</dimen>
+    <dimen name="xsmall_font">20dp</dimen>
+
+</resources>
