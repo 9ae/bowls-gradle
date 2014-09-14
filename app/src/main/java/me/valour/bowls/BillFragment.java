@@ -221,7 +221,23 @@ public class BillFragment extends Fragment implements
 	private void setTipAmount(double t){
 		amountTip.setText(getString(R.string.x_dollars, t));
 	}
-	
+
+    public void showTaxPercent(boolean show){
+        if(show){
+            percentTax.setVisibility(View.VISIBLE);
+        } else {
+            percentTax.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void showTipPercent(boolean show){
+        if(show){
+            percentTip.setVisibility(View.VISIBLE);
+        } else {
+            percentTip.setVisibility(View.INVISIBLE);
+        }
+    }
+
 	public void clearSummary(){
 		setSubtotal(0.0);
 		setTotal(0.0);

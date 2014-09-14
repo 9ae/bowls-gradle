@@ -121,7 +121,7 @@ public class TableActivity extends Activity implements
 		 } else {
 			 applyTax();
 		 }
-		
+        taxEstimate = amount;
 	}
 
 	public void applyTip() {
@@ -272,7 +272,7 @@ public class TableActivity extends Activity implements
 			} else {
 				btn.setBackgroundResource(R.drawable.ic_tbtn_top_right_sub);
 			}
-	
+	        billFragment.showTipPercent(true);
 		} else {
 			bill.clearTip();
 			updateBowlsPrice();
@@ -281,6 +281,7 @@ public class TableActivity extends Activity implements
 			} else {
 				btn.setBackgroundResource(R.drawable.ic_tbtn_top_right_add);
 			}
+            billFragment.showTipPercent(false);
 		}
 
 	}
@@ -297,6 +298,7 @@ public class TableActivity extends Activity implements
 			} else {
 				btn.setBackgroundResource(R.drawable.ic_tbtn_bot_right_sub);
 			}
+            billFragment.showTaxPercent(true);
 		} else {
 			bill.clearTax();
 			updateBowlsPrice();
@@ -305,6 +307,7 @@ public class TableActivity extends Activity implements
 			} else {
 				btn.setBackgroundResource(R.drawable.ic_tbtn_bot_right_add);
 			}
+            billFragment.showTaxPercent(false);
 		}
 		
 	}
