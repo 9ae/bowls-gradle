@@ -37,7 +37,7 @@
     <style name="BillLabel">
         <item name="android:textSize">@dimen/large_font</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
     </style>
     
     <style name="BillSubLabel">
@@ -47,7 +47,7 @@
     
     <style name="BillValue">
         <item name="android:textSize">@dimen/med_font</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/apple</item>
          <item name="android:textStyle">bold</item>
     </style>
     

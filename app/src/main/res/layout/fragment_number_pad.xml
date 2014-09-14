@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@android:color/black"
+    android:background="@color/off_white"
     tools:context=".NumberPadFragment" >
 
 <GridLayout     
@@ -43,8 +43,8 @@
              android:singleLine="true"
              android:gravity="center"
              android:textAlignment="gravity"
-             android:textColor="@color/lime"
-             android:textColorHint="@android:color/white"
+             android:textColor="@color/apple"
+             android:textColorHint="@color/lime"
              android:textSize="20sp" />
 
          <TextView

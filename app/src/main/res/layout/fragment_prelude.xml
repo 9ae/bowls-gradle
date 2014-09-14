@@ -66,7 +66,7 @@
             android:id="@+id/btn_split_equally"
             style="@style/SplitButtons"            
             android:text="@string/split_equally"
-            android:textColor="@android:color/black"
+            android:textColor="@color/off_white"
             android:background="@color/raspberry"
                         android:onClick="onSplitEqually"
              />
@@ -75,7 +75,7 @@
             android:id="@+id/btn_split_line"
             style="@style/SplitButtons"   
             android:text="@string/split_line"
-			android:background="@android:color/black"
+			android:background="@color/off_white"
             android:textColor="@color/raspberry"
                         android:onClick="onSplitByItem"
             
