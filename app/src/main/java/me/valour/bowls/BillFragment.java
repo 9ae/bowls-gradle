@@ -115,6 +115,7 @@ public class BillFragment extends Fragment implements
 					return;
 				}
 				enableActions(false);
+                deselectLineItem();
 				agent.editTax();
 				
 			}
@@ -127,6 +128,7 @@ public class BillFragment extends Fragment implements
 					return;
 				}
 				enableActions(false);
+                deselectLineItem();
 				agent.editTip();
 				
 			}
