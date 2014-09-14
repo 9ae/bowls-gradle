@@ -1,14 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/off_white"
-    tools:context=".TutorialFragment" >
-    <ImageView 
-        android:id="@+id/img_tutorial"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="0dip"
-        android:contentDescription="@string/descript_tutorial1"
-        android:src="@drawable/tutorial1" />
-</FrameLayout>
+    tools:context=".TutorialFragment"
+    android:orientation="horizontal">
+
+<me.valour.bowls.BowlsGroupMockery
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="3"
+    android:id="@+id/mock_table"></me.valour.bowls.BowlsGroupMockery>
+  <TextView
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="2"
+      android:id="@+id/instructional_text"
+      android:text="@string/tutorial_instruction1"
+      android:textSize="@dimen/xlarge_font"
+      android:textAlignment="center"
+      android:textColor="@color/raspberry"
+      android:textStyle="italic"/>
+</LinearLayout>

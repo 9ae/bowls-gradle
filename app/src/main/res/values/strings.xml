@@ -59,8 +59,9 @@
     <string name="descript_edit_subtotal">Edit subtotal</string>
     <string name="descript_edit_tax">Edit tax amount</string>
     <string name="descript_edit_tip">Edit tip percent</string>
-    <string name="descript_tutorial1">To add person, tap center bowl.</string>
-
+    <string name="tutorial_instruction1">To add person, \n\n tap center bowl.</string>
+    <string name="tutorial_instruction2">To remove person, \n\n drag their bowl to the center, \n And let go!</string>
+    <string name="tutorial_instruction3">Great job! \n Let\'s get started!</string>
     <dimen name="number_buttons_margin">1dp</dimen>
     <dimen name="number_buttons_size">5dp</dimen>
 
