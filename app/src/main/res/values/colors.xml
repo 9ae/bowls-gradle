@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  	<color name="lemon">#ffc6ff00</color>
-  	<color name="grapefruit">#ffff6e40</color>
-  	<color name="raspberry">#ffff5722</color>
-  	<color name="lime">#ffa3e9a4</color>
-  	<color name="apple">#ff2baf2b</color>
-    <color name="off_white">#fffafafa</color>
-</resources>
