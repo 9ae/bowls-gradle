@@ -1,4 +1,18 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
-    android:name="me.valour.bowls.MasterActivityFragment" tools:layout="@layout/fragment_master"
-    android:layout_width="match_parent" android:layout_height="match_parent" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
+    <fragment android:id="@+id/table_fragment"
+        android:name="me.valour.bowls.fragments.TableFragment"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_weight="1" />
+    <fragment android:id="@+id/bills_fragment"
+        android:name="me.valour.bowls.fragments.BillFragment"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

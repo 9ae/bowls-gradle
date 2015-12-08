@@ -1,23 +1,25 @@
-package me.valour.bowls;
+package me.valour.bowls.fragments;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import me.valour.bowls.R;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MasterActivityFragment extends Fragment {
+public class BillFragment extends Fragment {
 
-    public MasterActivityFragment() {
+    public BillFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_master, container, false);
+        return inflater.inflate(R.layout.fragment_bill, container, false);
     }
 }
