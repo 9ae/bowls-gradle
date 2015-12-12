@@ -17,6 +17,6 @@ public class MasterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master);
 
-
     }
+
 }
