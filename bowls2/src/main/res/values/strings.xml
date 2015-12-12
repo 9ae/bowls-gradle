@@ -2,4 +2,7 @@
     <string name="app_name">Bowls</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="fab_add_bowl">Friend</string>
+    <string name="fab_add_item">Bill Item</string>
 </resources>
