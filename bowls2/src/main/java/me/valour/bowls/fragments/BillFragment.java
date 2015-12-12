@@ -20,6 +20,23 @@ public class BillFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_bill, container, false);
+        View view = inflater.inflate(R.layout.fragment_bill, container, false);
+
+        view.findViewById(R.id.add_bowl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        view.findViewById(R.id.add_item).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        return view;
     }
 }

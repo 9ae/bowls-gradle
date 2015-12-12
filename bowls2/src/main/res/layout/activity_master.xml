@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -7,11 +7,15 @@
         android:name="me.valour.bowls.fragments.TableFragment"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        android:layout_weight="1" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" />
     <fragment android:id="@+id/bills_fragment"
         android:name="me.valour.bowls.fragments.BillFragment"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        android:layout_weight="1" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/table_fragment"/>
 
-</LinearLayout>
+</RelativeLayout>
