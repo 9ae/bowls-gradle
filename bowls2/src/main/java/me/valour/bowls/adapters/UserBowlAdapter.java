@@ -44,6 +44,7 @@ public class UserBowlAdapter extends BaseAdapter {
         BowlView bowl;
         if (convertView==null){
             bowl = new BowlView(context);
+            bowl.setRadius(bowlRadius);
             bowl.setColors(Kitchen.assignColor(position));
         } else {
             bowl = (BowlView) convertView;

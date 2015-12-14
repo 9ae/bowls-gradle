@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
@@ -25,7 +24,6 @@ import me.valour.bowls.adapters.UserBowlAdapter;
 import me.valour.bowls.services.Kitchen;
 import me.valour.bowls.models.User;
 
-@SuppressLint("NewApi")
 public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     int mMeasuredWidth;
@@ -55,6 +53,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         init();
     }
 
+    public BowlsGroup(Context context, AttributeSet attr) {
+        super(context, attr);
+
+        init();
+    }
+
     @Override
     public UserBowlAdapter getAdapter() {
         return usersAdapter;
@@ -67,32 +71,31 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         requestLayout();
     }
 
-    public BowlsGroup(Context context, AttributeSet attr) {
-        super(context, attr);
-
-        init();
-    }
-
     @Override
     protected void onLayout (boolean changed, int left, int top, int right, int bottom){
         measureView();
 
-        double angleDelta = Math.PI*2.0/bowls.size();
+        double angleDelta = Math.PI*2.0/usersAdapter.getCount();
         double topX = 0;
         double topY = -1.0*tableRadius;
 
-        int i= 0;
-        for(BowlView bowl: bowls){
-            bowl.bringToFront();
-            double angle = angleDelta*i;
-            double px = Math.cos(angle)*topX - Math.sin(angle)*topY + centerX;
-            double py = Math.sin(angle)*topX - Math.cos(angle)*topY + centerY;
-            bowl.setAngle(angle);
-            bowl.move((float)px, (float)py);
-            i++;
+        ViewGroup.LayoutParams defaultParams = new ViewGroup.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        if (getChildCount() == 0) {
+            for(int j = 0; j<usersAdapter.getCount(); j++){
+                BowlView bowl = (BowlView) usersAdapter.getView(j, null, this);
+                addViewInLayout(bowl, j, defaultParams);
+                bowl.bringToFront();
+                double angle = angleDelta*j;
+                double px = Math.cos(angle)*topX - Math.sin(angle)*topY + centerX;
+                double py = Math.sin(angle)*topX - Math.cos(angle)*topY + centerY;
+                bowl.setAngle(angle);
+                bowl.move((float)px, (float)py);
+            }
         }
 
-        super.onLayout(changed, left, top, right, bottom);
+            super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
@@ -109,17 +112,6 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         selectListener = new BowlSelectListener();
         deleteListener = new DeleteDropListener();
         measuredScreen = false;
-
-        bowls = new LinkedList<BowlView>();
-        for (int i = 0; i < Kitchen.minBowls; i++) {
-            //users.add(new User());
-
-            BowlView bowl = new BowlView(this.getContext());
-            bowl.setColors(Kitchen.assignColor(i));
-            bowls.add(bowl);
-            this.addView(bowl);
-            bowl.setOnTouchListener(selectListener);
-        }
 
     }
 
@@ -140,17 +132,15 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
             bowlRadius = (int) (q / 2.0);
             tableRadius -= bowlRadius;
 
-
-            for(BowlView bv: bowls){
-                bv.setRadius(bowlRadius);
-            }
             measuredScreen = true;
 
             float s = (float)(2*tableRadius-4*bowlRadius);
             if((s*0.9)>2*bowlRadius){
                 s *= 0.9;
             }
-
+            if(usersAdapter!=null){
+                usersAdapter.bowlRadius = bowlRadius;
+            }
         }
     }
 

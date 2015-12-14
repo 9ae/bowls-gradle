@@ -39,7 +39,7 @@ public class TableFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
 
         bowlsGroup = (BowlsGroup) view.findViewById(R.id.bowlsGroup);
-        usersAdapter = new UserBowlAdapter(this.getContext(), users);
+        usersAdapter = new UserBowlAdapter(bowlsGroup.getContext(), users);
         bowlsGroup.setAdapter(usersAdapter);
 
         return view;
