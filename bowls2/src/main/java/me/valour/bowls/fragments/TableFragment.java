@@ -7,7 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedList;
+
 import me.valour.bowls.R;
+import me.valour.bowls.adapters.UserBowlAdapter;
+import me.valour.bowls.models.User;
+import me.valour.bowls.services.Kitchen;
 import me.valour.bowls.views.BowlsGroup;
 
 /**
@@ -16,18 +21,32 @@ import me.valour.bowls.views.BowlsGroup;
 public class TableFragment extends Fragment {
 
     BowlsGroup bowlsGroup;
+    LinkedList<User> users;
+    UserBowlAdapter usersAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        users = new LinkedList<User>();
+        for (int i = 0; i < Kitchen.minBowls; i++) {
+            users.add(new User());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
 
         bowlsGroup = (BowlsGroup) view.findViewById(R.id.bowlsGroup);
+        usersAdapter = new UserBowlAdapter(this.getContext(), users);
+        bowlsGroup.setAdapter(usersAdapter);
 
         return view;
     }
 
     public void addBowl() {
-        bowlsGroup.addBowl();
+
 
     }
 }

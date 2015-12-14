@@ -16,15 +16,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import me.valour.bowls.adapters.UserBowlAdapter;
 import me.valour.bowls.services.Kitchen;
 import me.valour.bowls.models.User;
 
 @SuppressLint("NewApi")
-public class BowlsGroup extends FrameLayout {
+public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     int mMeasuredWidth;
     int mMeasuredHeight;
@@ -36,18 +38,12 @@ public class BowlsGroup extends FrameLayout {
     boolean selectReady = false;
     boolean addRemovable = true;
 
-    FrameLayout.LayoutParams defaultParams;
     BowlSelectListener selectListener;
     DeleteDropListener deleteListener;
-    BowlsGroupAgent agent;
 
     LinkedList<BowlView> bowls;
+    UserBowlAdapter usersAdapter;
 
-    FrameLayout trashBowl;
-    int bowlsIdCounter = 1;
-    LinkedList<Integer> disusedIds;
-    int currentDisusedId = -1;
-    BowlView selectedForDelete;
 
     public BowlsGroup(Context context) {
         super(context);
@@ -57,6 +53,18 @@ public class BowlsGroup extends FrameLayout {
     public BowlsGroup(Context context, AttributeSet ats, int ds) {
         super(context, ats, ds);
         init();
+    }
+
+    @Override
+    public UserBowlAdapter getAdapter() {
+        return usersAdapter;
+    }
+
+    @Override
+    public void setAdapter(UserBowlAdapter adapter) {
+        this.usersAdapter = adapter;
+        removeAllViewsInLayout();
+        requestLayout();
     }
 
     public BowlsGroup(Context context, AttributeSet attr) {
@@ -87,33 +95,32 @@ public class BowlsGroup extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
     }
 
+    @Override
+    public View getSelectedView() {
+        return null;
+    }
+
+    @Override
+    public void setSelection(int position) {
+
+    }
+
     private void init() {
         selectListener = new BowlSelectListener();
         deleteListener = new DeleteDropListener();
         measuredScreen = false;
-        defaultParams = new FrameLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        setClickable(true);
-        setFocusable(true);
 
         bowls = new LinkedList<BowlView>();
-        for (int i = 1; i <= Kitchen.minBowls; i++) {
-            BowlView bowl = new BowlView(this.getContext());
-            bowl.setColors(Kitchen.assignColor(bowlsIdCounter));
-            bowls.add(bowl);
-            this.addView(bowl, defaultParams);
-            bowl.setOnTouchListener(selectListener);
+        for (int i = 0; i < Kitchen.minBowls; i++) {
+            //users.add(new User());
 
-            bowlsIdCounter++;
+            BowlView bowl = new BowlView(this.getContext());
+            bowl.setColors(Kitchen.assignColor(i));
+            bowls.add(bowl);
+            this.addView(bowl);
+            bowl.setOnTouchListener(selectListener);
         }
 
-        disusedIds = new LinkedList<Integer>();
-
-        trashBowl = new FrameLayout(this.getContext());
-        //trashBowl.setBackgroundResource(R.drawable.ic_recycle);
-        this.addView(trashBowl, defaultParams);
-        trashBowl.setVisibility(View.GONE);
-        trashBowl.setOnDragListener(deleteListener);
     }
 
     public void measureView(){
@@ -143,10 +150,7 @@ public class BowlsGroup extends FrameLayout {
             if((s*0.9)>2*bowlRadius){
                 s *= 0.9;
             }
-            trashBowl.setMinimumHeight((int)s);
-            trashBowl.setMinimumWidth((int)s);
-            trashBowl.setX(centerX-s/2);
-            trashBowl.setY(centerY-s/2);
+
         }
     }
 
@@ -173,31 +177,14 @@ public class BowlsGroup extends FrameLayout {
         return result;
     }
 
-    public void addRemoveIcons(boolean showAdd){
-        if(showAdd){
-            if(bowls.size()<Kitchen.maxBowls){
-
-                trashBowl.setVisibility(View.GONE);
-            }
-        } else {
-
-            trashBowl.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void clearCenter(){
-
-        trashBowl.setVisibility(View.GONE);
-    }
-
     private BowlView getNewBowl(){
         BowlView bowl = new BowlView(this.getContext());
-        bowl.setColors(Kitchen.assignColor(bowlsIdCounter));
+
         if(measuredScreen){
             bowl.setRadius(bowlRadius);
         }
         bowl.move(centerX, centerY-(bowlRadius/2));
-        this.addView(bowl, defaultParams);
+
         bowl.setOnTouchListener(selectListener);
         bowl.bringToFront();
         return bowl;
@@ -206,23 +193,10 @@ public class BowlsGroup extends FrameLayout {
     public void addBowl(){
         BowlView bowl = getNewBowl();
 
-        if(currentDisusedId==-1){
-            bowlsIdCounter++;
-        } else {
-            bowl.setId(currentDisusedId);
-        }
-
         bowls.add(bowl);
     //        agent.addUser(bowl.user);
         bowl.formatText();
 
-        if(disusedIds.isEmpty()){
-            currentDisusedId = -1;
-
-        } else {
-            currentDisusedId = disusedIds.removeFirst();
-
-        }
 
         if(bowls.size()>=Kitchen.maxBowls){
             //TODO: flag that no more new bowls can be added
@@ -230,15 +204,9 @@ public class BowlsGroup extends FrameLayout {
     }
 
     public void removeBowl(final BowlView bowl){
-        disusedIds.add(bowl.getId());
+
         bowls.remove(bowl);
         refreshBowls();
-        addRemoveIcons(true);
-
-        if(currentDisusedId==-1 && !disusedIds.isEmpty()){
-            currentDisusedId = disusedIds.removeFirst();
-
-        }
 
         if((bowls.size()+1)==Kitchen.maxBowls){
            //TODO: allow bowl to be added again
@@ -290,14 +258,14 @@ public class BowlsGroup extends FrameLayout {
         selectReady = true;
         clearSelection();
         bowlsFocus(false);
-        clearCenter();
+
     }
 
     public void stopBowlSelect(){
         selectReady = false;
         clearSelection();
         bowlsFocus(true);
-        addRemoveIcons(true);
+
     }
 
     public List<User> getSelectedUsers(){
@@ -323,21 +291,13 @@ public class BowlsGroup extends FrameLayout {
         addRemovable = false;
     }
 
-    public void showInfo(BowlView bv){
-
-    }
-
-
-    public void attachBowlAgents(Activity activity){
-        agent = (BowlsGroupAgent) activity;
-    }
 
     private class DeleteDropListener implements OnDragListener{
 
         public boolean deleteBowl(BowlView bowl){
-            if(agent.removeUserConfirm(bowl)){
-                removeBowl(bowl);
-            }
+
+            removeBowl(bowl);
+
             return true;
         }
 
@@ -366,7 +326,7 @@ public class BowlsGroup extends FrameLayout {
                             view.post(new Runnable(){
                                 @Override
                                 public void run() {
-                                    clearCenter();
+
                                     deleteBowl(view);
                                 }});
 
@@ -375,7 +335,7 @@ public class BowlsGroup extends FrameLayout {
                                 @Override
                                 public void run() {
                                     view.setVisibility(View.VISIBLE);
-                                    addRemoveIcons(true);
+
                                 }});
                         }
                     }
@@ -424,7 +384,7 @@ public class BowlsGroup extends FrameLayout {
                         float movedY = Math.abs(move.getY() - py);
 
                         if(movedX>10 || movedY>10){
-                            addRemoveIcons(false);
+
                             v.setOnDragListener(deleteListener);
                             ClipData data = ClipData.newPlainText("", "");
                             DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
@@ -433,25 +393,19 @@ public class BowlsGroup extends FrameLayout {
                         }
                         break;
                     case MotionEvent.ACTION_UP:
-                        if(!moved){ showInfo(bv); }
+
                         break;
                 }
                 return true;
             }
             else {
                 if(action==MotionEvent.ACTION_UP){
-                    showInfo(bv);
+
                 }
                 return true;
             }
         }
 
-    }
-
-    public interface BowlsGroupAgent{
-        public void addUser(User user);
-        public boolean removeUserConfirm(BowlView bv);
-        public void removeUserDo(User user);
     }
 
 }

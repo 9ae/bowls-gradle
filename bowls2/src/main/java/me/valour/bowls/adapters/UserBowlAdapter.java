@@ -17,6 +17,8 @@ public class UserBowlAdapter extends BaseAdapter {
     private List<User> users = Collections.emptyList();
     private Context context;
 
+    public int bowlRadius = 0;
+
     public UserBowlAdapter(Context context, List<User> users){
         this.context = context;
          this.users = users;
