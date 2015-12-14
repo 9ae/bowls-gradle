@@ -101,9 +101,10 @@ public class BowlsGroup extends FrameLayout {
             BowlView bowl = new BowlView(this.getContext());
             bowl.setColors(Kitchen.assignColor(bowlsIdCounter));
             bowls.add(bowl);
-            bowlsIdCounter++;
             this.addView(bowl, defaultParams);
             bowl.setOnTouchListener(selectListener);
+
+            bowlsIdCounter++;
         }
 
         disusedIds = new LinkedList<Integer>();
@@ -191,7 +192,7 @@ public class BowlsGroup extends FrameLayout {
 
     private BowlView getNewBowl(){
         BowlView bowl = new BowlView(this.getContext());
-        //TODO: set color of new bowl
+        bowl.setColors(Kitchen.assignColor(bowlsIdCounter));
         if(measuredScreen){
             bowl.setRadius(bowlRadius);
         }
@@ -212,7 +213,7 @@ public class BowlsGroup extends FrameLayout {
         }
 
         bowls.add(bowl);
-        agent.addUser(bowl.user);
+    //        agent.addUser(bowl.user);
         bowl.formatText();
 
         if(disusedIds.isEmpty()){
