@@ -4,21 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
-import android.content.res.Resources;
+
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.DragEvent;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import me.valour.bowls.adapters.UserBowlAdapter;
 import me.valour.bowls.services.Kitchen;
@@ -32,15 +27,17 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
     float centerY=0;
     int tableRadius;
     int bowlRadius;
+    int bowlDiameter;
     boolean measuredScreen;
     boolean selectReady = false;
     boolean addRemovable = true;
 
-    BowlSelectListener selectListener;
-    DeleteDropListener deleteListener;
+    //BowlSelectListener selectListener;
+    //DeleteDropListener deleteListener;
 
-    LinkedList<BowlView> bowls;
     UserBowlAdapter usersAdapter;
+
+    ViewGroup.LayoutParams defaultParams;
 
 
     public BowlsGroup(Context context) {
@@ -73,29 +70,28 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     @Override
     protected void onLayout (boolean changed, int left, int top, int right, int bottom){
+        super.onLayout(changed, left, top, right, bottom);
         measureView();
 
         double angleDelta = Math.PI*2.0/usersAdapter.getCount();
         double topX = 0;
         double topY = -1.0*tableRadius;
 
-        ViewGroup.LayoutParams defaultParams = new ViewGroup.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-
-        if (getChildCount() == 0) {
+        if (getChildCount() != usersAdapter.getCount()) {
             for(int j = 0; j<usersAdapter.getCount(); j++){
                 BowlView bowl = (BowlView) usersAdapter.getView(j, null, this);
-                addViewInLayout(bowl, j, defaultParams);
-                bowl.bringToFront();
+                addViewInLayout(bowl, j, defaultParams, true);
                 double angle = angleDelta*j;
                 double px = Math.cos(angle)*topX - Math.sin(angle)*topY + centerX;
                 double py = Math.sin(angle)*topX - Math.cos(angle)*topY + centerY;
                 bowl.setAngle(angle);
-                bowl.move((float)px, (float)py);
+                bowl.measure(bowlDiameter, bowlDiameter);
+                bowl.layout(0, 0, bowlDiameter, bowlDiameter);
+                bowl.move((float) px, (float) py);
+                bowl.bringToFront();
             }
         }
 
-            super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
@@ -109,9 +105,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
     }
 
     private void init() {
-        selectListener = new BowlSelectListener();
-        deleteListener = new DeleteDropListener();
+//        selectListener = new BowlSelectListener();
+//        deleteListener = new DeleteDropListener();
         measuredScreen = false;
+
+        defaultParams = new ViewGroup.LayoutParams(
+                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
     }
 
@@ -129,15 +128,17 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
             double q = ((double) tableRadius * 2.0 * Math.PI)
                     / (double) Kitchen.maxBowls;
+            bowlDiameter = (int) q;
             bowlRadius = (int) (q / 2.0);
             tableRadius -= bowlRadius;
 
             measuredScreen = true;
-
+/*
             float s = (float)(2*tableRadius-4*bowlRadius);
             if((s*0.9)>2*bowlRadius){
                 s *= 0.9;
             }
+            */
             if(usersAdapter!=null){
                 usersAdapter.bowlRadius = bowlRadius;
             }
@@ -166,7 +167,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         }
         return result;
     }
-
+/*
     private BowlView getNewBowl(){
         BowlView bowl = new BowlView(this.getContext());
 
@@ -264,12 +265,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     public void manualSelect(List<User> users){
         selectListener.selected.addAll(users);
-       /*
+
         for(User u: users){
             u.view.setSelected(true);
             u.view.unfade();
         }
-        */
+
     }
 
     public void enableActions(){
@@ -280,8 +281,8 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         selectReady = false;
         addRemovable = false;
     }
-
-
+*/
+/*
     private class DeleteDropListener implements OnDragListener{
 
         public boolean deleteBowl(BowlView bowl){
@@ -397,5 +398,5 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         }
 
     }
-
+*/
 }

@@ -60,6 +60,10 @@ public class BowlView extends TextView{
         this.setGravity(Gravity.CENTER);
     }
 
+    public void setUser(User user){
+        this.user = user;
+    }
+
     public void move(float x, float y){
         if(originalX==0 && originalY==0){
             originalX = x;
@@ -87,12 +91,6 @@ public class BowlView extends TextView{
     public void resetPosition(){
         setX(originalX);
         setY(originalY);
-    }
-
-    @Override
-    public void setId(int id){
-        super.setId(id);
-        user = new User();
     }
 
     public void setColors(int color){

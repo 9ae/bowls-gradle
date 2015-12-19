@@ -46,7 +46,7 @@ public class TableFragment extends Fragment {
     }
 
     public void addBowl() {
-
-
+        users.add(new User());
+        usersAdapter.notifyDataSetChanged();
     }
 }

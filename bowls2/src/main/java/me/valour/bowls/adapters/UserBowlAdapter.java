@@ -1,6 +1,7 @@
 package me.valour.bowls.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -45,10 +46,12 @@ public class UserBowlAdapter extends BaseAdapter {
         if (convertView==null){
             bowl = new BowlView(context);
             bowl.setRadius(bowlRadius);
-            bowl.setColors(Kitchen.assignColor(position));
         } else {
             bowl = (BowlView) convertView;
         }
+        bowl.setColors(Kitchen.assignColor(position + 1));
+        bowl.setId(position);
+        bowl.setUser(users.get(position));
 
         return bowl;
     }
