@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewPropertyAnimator;
 import android.widget.TextView;
@@ -73,7 +74,7 @@ public class BowlView extends TextView{
         } else {
             ViewPropertyAnimator anim = animate();
             anim.x(x - (float)radius);
-            anim.y(y - (float)radius);
+            anim.y(y - (float) radius);
             anim.start();
             originalX = x;
             originalY = y;

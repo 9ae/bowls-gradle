@@ -73,25 +73,33 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         super.onLayout(changed, left, top, right, bottom);
         measureView();
 
-        double angleDelta = Math.PI*2.0/usersAdapter.getCount();
+        int usersCount = usersAdapter.getCount();
+        double angleDelta = Math.PI*2.0/(double)usersCount;
         double topX = 0;
         double topY = -1.0*tableRadius;
 
-        if (getChildCount() != usersAdapter.getCount()) {
-            for(int j = 0; j<usersAdapter.getCount(); j++){
-                BowlView bowl = (BowlView) usersAdapter.getView(j, null, this);
-                addViewInLayout(bowl, j, defaultParams, true);
+        if (getChildCount() != usersCount) {
+            for(int j = 0; j<usersCount; j++){
+                View convertView = this.getChildAt(j);
+                BowlView bowl = (BowlView) usersAdapter.getView(j, convertView, this);
+                if (convertView==null) {
+                    addViewInLayout(bowl, j, defaultParams, true);
+                    bowl.measure(bowlDiameter, bowlDiameter);
+                    bowl.layout(0, 0, bowlDiameter, bowlDiameter);
+                }
+
                 double angle = angleDelta*j;
                 double px = Math.cos(angle)*topX - Math.sin(angle)*topY + centerX;
                 double py = Math.sin(angle)*topX - Math.cos(angle)*topY + centerY;
+
+                Log.i("vars", "["+j+"] @ " +angle + " (" +px +","+py+")" );
+
                 bowl.setAngle(angle);
-                bowl.measure(bowlDiameter, bowlDiameter);
-                bowl.layout(0, 0, bowlDiameter, bowlDiameter);
                 bowl.move((float) px, (float) py);
                 bowl.bringToFront();
             }
         }
-
+        Log.i("vars", "has "+getChildCount()+" child views");
     }
 
     @Override
@@ -126,6 +134,8 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
             centerX = (float)cx;
             centerY = (float)cy;
 
+            Log.i("vars", centerX+","+centerY);
+
             double q = ((double) tableRadius * 2.0 * Math.PI)
                     / (double) Kitchen.maxBowls;
             bowlDiameter = (int) q;
@@ -133,12 +143,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
             tableRadius -= bowlRadius;
 
             measuredScreen = true;
-/*
-            float s = (float)(2*tableRadius-4*bowlRadius);
-            if((s*0.9)>2*bowlRadius){
-                s *= 0.9;
-            }
-            */
+
             if(usersAdapter!=null){
                 usersAdapter.bowlRadius = bowlRadius;
             }

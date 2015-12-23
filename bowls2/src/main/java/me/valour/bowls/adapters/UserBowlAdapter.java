@@ -46,12 +46,12 @@ public class UserBowlAdapter extends BaseAdapter {
         if (convertView==null){
             bowl = new BowlView(context);
             bowl.setRadius(bowlRadius);
+            bowl.setColors(Kitchen.assignColor(position + 1));
+            bowl.setId(position);
+            bowl.setUser(users.get(position));
         } else {
             bowl = (BowlView) convertView;
         }
-        bowl.setColors(Kitchen.assignColor(position + 1));
-        bowl.setId(position);
-        bowl.setUser(users.get(position));
 
         return bowl;
     }
