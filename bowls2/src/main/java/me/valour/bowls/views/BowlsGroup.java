@@ -75,8 +75,6 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
         int usersCount = usersAdapter.getCount();
         double angleDelta = Math.PI*2.0/(double)usersCount;
-        double topX = 0;
-        double topY = -1.0*tableRadius;
 
         if (getChildCount() != usersCount) {
             for(int j = 0; j<usersCount; j++){
@@ -89,10 +87,11 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                 }
 
                 double angle = angleDelta*j;
-                double px = Math.cos(angle)*topX - Math.sin(angle)*topY + centerX;
-                double py = Math.sin(angle)*topX - Math.cos(angle)*topY + centerY;
+                double px = centerX + Math.sin(angle)*tableRadius;
+                double py = centerY + Math.cos(angle)*tableRadius;
 
-                Log.i("vars", "["+j+"] @ " +angle + " (" +px +","+py+")" );
+                Log.i("vars", "["+j+"] @ " +Math.toDegrees(angle) + " (" + (Math.sin(angle)>0 ?"+":"-") +
+                        ","+(Math.cos(angle)>0 ?"+":"-")+")" );
 
                 bowl.setAngle(angle);
                 bowl.move((float) px, (float) py);
