@@ -1,8 +1,11 @@
 package me.valour.bowls.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import android.content.ClipData;
 import android.content.Context;
@@ -30,16 +33,17 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
     int bowlRadius;
     int bowlDiameter;
     boolean measuredScreen;
-    boolean selectReady = false;
+    boolean selectReady = true;
     boolean addRemovable = true;
 
-    //BowlSelectListener selectListener;
+    BowlSelectListener selectListener;
     //DeleteDropListener deleteListener;
 
     UserBowlAdapter usersAdapter;
 
     ViewGroup.LayoutParams defaultParams;
 
+    private HashSet<BowlView> selected = new HashSet<BowlView>();
 
     public BowlsGroup(Context context) {
         super(context);
@@ -67,6 +71,23 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         this.usersAdapter = adapter;
         removeAllViewsInLayout();
         requestLayout();
+/*
+        this.setOnItemSelectedListener( new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                Log.i("vars", "bowl selected");
+                BowlView selectedBowl = (BowlView) view;
+                selected.add(selectedBowl);
+                selectedBowl.toggleSelected();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        */
     }
 
     @Override
@@ -86,6 +107,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                     addViewInLayout(bowl, j, defaultParams, true);
                     bowl.measure(bowlDiameter, bowlDiameter);
                     bowl.layout(0, 0, bowlDiameter, bowlDiameter);
+                    bowl.setOnTouchListener(selectListener);
                 }
 
                 double angle = angleDelta*j;
@@ -107,9 +129,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
                 bowl.move((float) px, (float) py);
                 bowl.bringToFront();
+
+                if(j+1 == usersCount){
+                    setSelection(j);
+                }
             }
         }
-        Log.i("vars", "has "+getChildCount()+" child views");
     }
 
     @Override
@@ -119,11 +144,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     @Override
     public void setSelection(int position) {
-
+        BowlView selectedBowl = (BowlView) findViewById(position);
+        selected.add(selectedBowl);
     }
 
     private void init() {
-//        selectListener = new BowlSelectListener();
+        selectListener = new BowlSelectListener();
 //        deleteListener = new DeleteDropListener();
         measuredScreen = false;
 
@@ -353,16 +379,15 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         }
 
     }
-
+*/
     private class BowlSelectListener implements OnTouchListener{
 
-        public List<User> selected;
         public boolean moved = false;
         public float px=0;
         public float py=0;
 
         public BowlSelectListener(){
-            selected = new ArrayList<User>();
+
         }
 
         @Override
@@ -372,12 +397,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
             if(selectReady){
                 if(action==MotionEvent.ACTION_DOWN){
                     if(bv.toggleSelected()){
-                        selected.remove(bv.user);
+                        selected.remove(bv);
                     } else {
-                        selected.add(bv.user);
+                        selected.add(bv);
                     }
                 } return false;
-            } else if (bowls.size()>Kitchen.minBowls && addRemovable) {
+            } else if (usersAdapter.getCount()>Kitchen.minBowls && addRemovable) {
                 switch(action){
                     case MotionEvent.ACTION_DOWN:
                         moved = false;
@@ -385,7 +410,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                         py = move.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
-
+                    /*
                         float movedX = Math.abs(move.getX() - px);
                         float movedY = Math.abs(move.getY() - py);
 
@@ -397,6 +422,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                             v.startDrag(data, shadowBuilder, v, 0);
                             moved = true;
                         }
+                    */
                         break;
                     case MotionEvent.ACTION_UP:
 
@@ -413,5 +439,4 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         }
 
     }
-*/
 }

@@ -60,4 +60,5 @@ public class UserBowlAdapter extends BaseAdapter {
         this.users = users;
         notifyDataSetChanged();
     }
+
 }
