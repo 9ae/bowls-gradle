@@ -78,7 +78,7 @@ public class BowlView extends TextView{
             anim.start();
             originalX = x;
             originalY = y;
-        }
+         }
     }
 
     public void setAngle(double a){

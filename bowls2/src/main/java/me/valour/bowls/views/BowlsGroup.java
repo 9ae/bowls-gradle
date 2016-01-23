@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import me.valour.bowls.R;
 import me.valour.bowls.adapters.UserBowlAdapter;
 import me.valour.bowls.services.Kitchen;
 import me.valour.bowls.models.User;
@@ -78,22 +79,32 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
         if (getChildCount() != usersCount) {
             for(int j = 0; j<usersCount; j++){
-                View convertView = this.getChildAt(j);
+                View convertView = this.findViewById(j);
                 BowlView bowl = (BowlView) usersAdapter.getView(j, convertView, this);
                 if (convertView==null) {
+                    bowl.setId(j);
                     addViewInLayout(bowl, j, defaultParams, true);
                     bowl.measure(bowlDiameter, bowlDiameter);
                     bowl.layout(0, 0, bowlDiameter, bowlDiameter);
                 }
 
                 double angle = angleDelta*j;
-                double px = centerX + Math.sin(angle)*tableRadius;
-                double py = centerY + Math.cos(angle)*tableRadius;
+                double px = Math.sin(angle)*tableRadius;
+                double py = Math.cos(angle)*tableRadius;
 
-                Log.i("vars", "["+j+"] @ " +Math.toDegrees(angle) + " (" + (Math.sin(angle)>0 ?"+":"-") +
-                        ","+(Math.cos(angle)>0 ?"+":"-")+")" );
+                if(px<0.0) {
+                    px = centerX - Math.abs(px);
+                } else {
+                    px = centerX + px;
+                }
+                if(py<0.0) {
+                    py = centerY + Math.abs(py);
+                } else {
+                    py = centerY - py;
+                }
 
                 bowl.setAngle(angle);
+
                 bowl.move((float) px, (float) py);
                 bowl.bringToFront();
             }
