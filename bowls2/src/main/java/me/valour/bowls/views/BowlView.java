@@ -29,6 +29,8 @@ public class BowlView extends TextView{
     private float offsetX;
     private float offsetY;
 
+    private boolean deleteReady = false;
+
     public BowlView(Context context, AttributeSet ats, int ds){
         super(context, ats, ds);
         init();
@@ -200,6 +202,15 @@ public class BowlView extends TextView{
 
     public Paint getPrimaryPaint() {
         return primaryPaint;
+    }
+
+    public void prepareDelete(){
+        deleteReady = true;
+        setText("X");
+    }
+
+    public boolean isDeleteReady(){
+        return deleteReady;
     }
 
 }

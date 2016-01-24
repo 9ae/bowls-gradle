@@ -1,6 +1,8 @@
 package me.valour.bowls.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.LinkedList;
 
 import me.valour.bowls.R;
+import me.valour.bowls.activities.MasterActivity;
 import me.valour.bowls.adapters.UserBowlAdapter;
 import me.valour.bowls.models.User;
 import me.valour.bowls.services.Kitchen;
@@ -21,17 +24,12 @@ import me.valour.bowls.views.BowlsGroup;
 public class TableFragment extends Fragment {
 
     BowlsGroup bowlsGroup;
-    LinkedList<User> users;
     UserBowlAdapter usersAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        users = new LinkedList<User>();
-        for (int i = 0; i < Kitchen.minBowls; i++) {
-            users.add(new User());
-        }
     }
 
     @Override
@@ -39,15 +37,19 @@ public class TableFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
 
         bowlsGroup = (BowlsGroup) view.findViewById(R.id.bowlsGroup);
-        usersAdapter = new UserBowlAdapter(bowlsGroup.getContext(), users);
-        bowlsGroup.setAdapter(usersAdapter);
-
+        bowlsGroup.setActionsAgent(getActivity());
         return view;
     }
 
-    public void addBowl() {
-        users.add(new User());
-        usersAdapter.updateUsers(users);
+    public void initUserAdapter(LinkedList<User> users){
+        usersAdapter = new UserBowlAdapter(bowlsGroup.getContext(), users);
+        bowlsGroup.setAdapter(usersAdapter);
+    }
+
+    public void updateUserAdapter() {
+        MasterActivity master = (MasterActivity) this.getActivity();
+        usersAdapter.updateUsers(master.users);
         bowlsGroup.requestLayout();
     }
+
 }

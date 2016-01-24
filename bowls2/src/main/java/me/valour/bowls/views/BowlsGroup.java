@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 
@@ -17,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import me.valour.bowls.R;
 import me.valour.bowls.adapters.UserBowlAdapter;
@@ -33,17 +36,18 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
     int bowlRadius;
     int bowlDiameter;
     boolean measuredScreen;
-    boolean selectReady = true;
-    boolean addRemovable = true;
 
     BowlSelectListener selectListener;
-    //DeleteDropListener deleteListener;
 
     UserBowlAdapter usersAdapter;
 
     ViewGroup.LayoutParams defaultParams;
 
+    BowlTouchMode bowlTouchMode = BowlTouchMode.NONE;
+
     private HashSet<BowlView> selected = new HashSet<BowlView>();
+
+    BroadcastActions actions;
 
     public BowlsGroup(Context context) {
         super(context);
@@ -71,23 +75,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         this.usersAdapter = adapter;
         removeAllViewsInLayout();
         requestLayout();
-/*
-        this.setOnItemSelectedListener( new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.i("vars", "bowl selected");
-                BowlView selectedBowl = (BowlView) view;
-                selected.add(selectedBowl);
-                selectedBowl.toggleSelected();
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        */
     }
 
     @Override
@@ -135,6 +123,12 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                 }
             }
         }
+
+        if (usersCount>2) {
+            bowlTouchMode = BowlTouchMode.DELETE;
+        } else {
+            bowlTouchMode = BowlTouchMode.NONE;
+        }
     }
 
     @Override
@@ -156,6 +150,16 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         defaultParams = new ViewGroup.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 
+/*        deleteBox = new FrameLayout(this.getContext());
+        deleteBox.setBackgroundResource(android.R.drawable.ic_delete);
+        addViewInLayout(deleteBox, 109, defaultParams);
+        deleteBox.setVisibility(View.GONE);
+        deleteBox.setOnDragListener(deleteListener);
+
+        TextView deleteCaption = new TextView(deleteBox.getContext());
+        deleteCaption.setText("Drag here to delete");
+        deleteBox.addView(deleteCaption);
+*/
     }
 
     public void measureView(){
@@ -169,8 +173,6 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
             tableRadius = Math.min(cx, cy);
             centerX = (float)cx;
             centerY = (float)cy;
-
-            Log.i("vars", centerX+","+centerY);
 
             double q = ((double) tableRadius * 2.0 * Math.PI)
                     / (double) Kitchen.maxBowls;
@@ -208,6 +210,11 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         }
         return result;
     }
+
+    public void setActionsAgent(Activity activity){
+        actions = (BroadcastActions) activity;
+    }
+
 /*
     private BowlView getNewBowl(){
         BowlView bowl = new BowlView(this.getContext());
@@ -323,68 +330,8 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         addRemovable = false;
     }
 */
-/*
-    private class DeleteDropListener implements OnDragListener{
 
-        public boolean deleteBowl(BowlView bowl){
-
-            removeBowl(bowl);
-
-            return true;
-        }
-
-        @Override
-        public boolean onDrag(View v, DragEvent event) {
-            switch (event.getAction()) {
-                case DragEvent.ACTION_DRAG_STARTED:
-                    //no action necessary
-                    ((BowlView)event.getLocalState()).setVisibility(View.INVISIBLE);
-                    break;
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    break;
-                case DragEvent.ACTION_DRAG_LOCATION:
-                    break;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    break;
-                case DragEvent.ACTION_DROP:
-                    if(v.getId()!=-1){
-                        return(false);
-                    }
-                    break;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    if(v.getId()==-1){
-                        final BowlView view = ((BowlView)event.getLocalState());
-                        if(event.getResult()){
-                            view.post(new Runnable(){
-                                @Override
-                                public void run() {
-
-                                    deleteBowl(view);
-                                }});
-
-                        } else {
-                            view.post(new Runnable(){
-                                @Override
-                                public void run() {
-                                    view.setVisibility(View.VISIBLE);
-
-                                }});
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return true;
-        }
-
-    }
-*/
     private class BowlSelectListener implements OnTouchListener{
-
-        public boolean moved = false;
-        public float px=0;
-        public float py=0;
 
         public BowlSelectListener(){
 
@@ -394,49 +341,42 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         public boolean onTouch(View v, MotionEvent move) {
             BowlView bv = (BowlView)v;
             int action = move.getAction();
-            if(selectReady){
-                if(action==MotionEvent.ACTION_DOWN){
-                    if(bv.toggleSelected()){
-                        selected.remove(bv);
-                    } else {
-                        selected.add(bv);
-                    }
-                } return false;
-            } else if (usersAdapter.getCount()>Kitchen.minBowls && addRemovable) {
-                switch(action){
-                    case MotionEvent.ACTION_DOWN:
-                        moved = false;
-                        px = move.getX();
-                        py = move.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                    /*
-                        float movedX = Math.abs(move.getX() - px);
-                        float movedY = Math.abs(move.getY() - py);
+            if(action==MotionEvent.ACTION_DOWN){
 
-                        if(movedX>10 || movedY>10){
+                switch (bowlTouchMode){
+                    case DELETE:
 
-                            v.setOnDragListener(deleteListener);
-                            ClipData data = ClipData.newPlainText("", "");
-                            DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                            v.startDrag(data, shadowBuilder, v, 0);
-                            moved = true;
+                        if(bv.isDeleteReady()){
+                            //TODO: delete
+                        } else {
+                            bv.prepareDelete();
                         }
-                    */
                         break;
-                    case MotionEvent.ACTION_UP:
 
+                    case ASSIGN_TO_ITEM:
+                        //TOODO: assign to item
                         break;
-                }
-                return true;
-            }
-            else {
-                if(action==MotionEvent.ACTION_UP){
+
+                    default:
+                        break;
 
                 }
+
+                return false;
+            } else {
                 return true;
             }
         }
+
+    }
+
+    enum BowlTouchMode {
+        NONE, DELETE, ASSIGN_TO_ITEM;
+    }
+
+    public interface BroadcastActions {
+
+        public void deleteUser(User user);
 
     }
 }
