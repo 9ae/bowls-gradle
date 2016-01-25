@@ -47,6 +47,9 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     private HashSet<BowlView> selected = new HashSet<BowlView>();
 
+    private LinkedList<String> bowlTags = new LinkedList<String>();
+    private LinkedList<String> remainderTags = new LinkedList<String>();
+
     BroadcastActions actions;
     BowlView bowlToDelete = null;
 
@@ -84,16 +87,25 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         super.onLayout(changed, left, top, right, bottom);
         measureView();
 
-        Log.i("vars", "On layout");
-
         int usersCount = usersAdapter.getCount();
         double angleDelta = Math.PI*2.0/(double)usersCount;
 
         for(int j = 0; j<usersCount; j++){
-            View convertView = this.findViewById(j);
+            View convertView = null;
+            String tag;
+            try {
+                tag = bowlTags.get(j);
+            } catch (IndexOutOfBoundsException ex){
+                tag = makeTag(j);
+                bowlTags.add(tag);
+            }
+
+            Log.i("vars", "Drawing "+tag);
+            convertView = findViewWithTag(tag);
             BowlView bowl = (BowlView) usersAdapter.getView(j, convertView, this);
+
             if (convertView==null) {
-                bowl.setId(j);
+                bowl.setTag(tag);
                 addViewInLayout(bowl, j, defaultParams, true);
                 bowl.measure(bowlDiameter, bowlDiameter);
                 bowl.layout(0, 0, bowlDiameter, bowlDiameter);
@@ -215,6 +227,14 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
     public void setActionsAgent(Activity activity){
         actions = (BroadcastActions) activity;
+    }
+
+    private String makeTag(int i){
+        if(remainderTags.isEmpty()){
+            return "number"+i;
+        } else {
+            return remainderTags.pop();
+        }
     }
 
 /*
@@ -351,9 +371,15 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
                             bv.prepareDelete();
                             bowlToDelete = bv;
                         } else if (bv.equals(bowlToDelete)){
+                            String tag = (String)bv.getTag();
+                            bowlTags.remove(tag);
+                            remainderTags.add(tag);
+                            Log.i("vars", "deleting "+tag);
+                            Log.i("vars", bowlTags.size()+" bowls now");
                             bv.delete();
-                            actions.deleteUser(bv.user);
                             bowlToDelete = null;
+                            actions.deleteUser(bv.user);
+
                         }
 
                         break;

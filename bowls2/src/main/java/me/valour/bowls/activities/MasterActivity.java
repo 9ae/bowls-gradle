@@ -58,7 +58,6 @@ public class MasterActivity extends Activity implements BowlsGroup.BroadcastActi
 
     @Override
     public void deleteUser(User user) {
-        Log.i("vars", "MasterActivity.deleteUser");
         users.remove(user);
         tableFragment.updateUserAdapter();
     }

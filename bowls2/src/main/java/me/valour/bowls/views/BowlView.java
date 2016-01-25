@@ -209,6 +209,8 @@ public class BowlView extends TextView{
     public void delete(){
         setText(null);
         setVisibility(GONE);
+        setX(0);
+        setY(0);
     }
 
 }
