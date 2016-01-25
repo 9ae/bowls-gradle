@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -51,12 +52,13 @@ public class MasterActivity extends Activity implements BowlsGroup.BroadcastActi
             users.add(new User());
         }
 
-        tableFragment.initUserAdapter(users);
+        tableFragment.initUserAdapter();
 
     }
 
     @Override
     public void deleteUser(User user) {
+        Log.i("vars", "MasterActivity.deleteUser");
         users.remove(user);
         tableFragment.updateUserAdapter();
     }

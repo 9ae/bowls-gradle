@@ -41,8 +41,9 @@ public class TableFragment extends Fragment {
         return view;
     }
 
-    public void initUserAdapter(LinkedList<User> users){
-        usersAdapter = new UserBowlAdapter(bowlsGroup.getContext(), users);
+    public void initUserAdapter(){
+        MasterActivity master = (MasterActivity) this.getActivity();
+        usersAdapter = new UserBowlAdapter(bowlsGroup.getContext(), master.users);
         bowlsGroup.setAdapter(usersAdapter);
     }
 

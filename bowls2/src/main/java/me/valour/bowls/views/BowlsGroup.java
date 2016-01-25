@@ -48,6 +48,7 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
     private HashSet<BowlView> selected = new HashSet<BowlView>();
 
     BroadcastActions actions;
+    BowlView bowlToDelete = null;
 
     public BowlsGroup(Context context) {
         super(context);
@@ -83,44 +84,45 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
         super.onLayout(changed, left, top, right, bottom);
         measureView();
 
+        Log.i("vars", "On layout");
+
         int usersCount = usersAdapter.getCount();
         double angleDelta = Math.PI*2.0/(double)usersCount;
 
-        if (getChildCount() != usersCount) {
-            for(int j = 0; j<usersCount; j++){
-                View convertView = this.findViewById(j);
-                BowlView bowl = (BowlView) usersAdapter.getView(j, convertView, this);
-                if (convertView==null) {
-                    bowl.setId(j);
-                    addViewInLayout(bowl, j, defaultParams, true);
-                    bowl.measure(bowlDiameter, bowlDiameter);
-                    bowl.layout(0, 0, bowlDiameter, bowlDiameter);
-                    bowl.setOnTouchListener(selectListener);
-                }
+        for(int j = 0; j<usersCount; j++){
+            View convertView = this.findViewById(j);
+            BowlView bowl = (BowlView) usersAdapter.getView(j, convertView, this);
+            if (convertView==null) {
+                bowl.setId(j);
+                addViewInLayout(bowl, j, defaultParams, true);
+                bowl.measure(bowlDiameter, bowlDiameter);
+                bowl.layout(0, 0, bowlDiameter, bowlDiameter);
+                bowl.setOnTouchListener(selectListener);
+            }
 
-                double angle = angleDelta*j;
-                double px = Math.sin(angle)*tableRadius;
-                double py = Math.cos(angle)*tableRadius;
+            double angle = angleDelta*j;
+            double px = Math.sin(angle)*tableRadius;
+            double py = Math.cos(angle)*tableRadius;
 
-                if(px<0.0) {
-                    px = centerX - Math.abs(px);
-                } else {
-                    px = centerX + px;
-                }
-                if(py<0.0) {
-                    py = centerY + Math.abs(py);
-                } else {
-                    py = centerY - py;
-                }
+            if(px<0.0) {
+                px = centerX - Math.abs(px);
+            } else {
+                px = centerX + px;
+            }
+            if(py<0.0) {
+                py = centerY + Math.abs(py);
+            } else {
+                py = centerY - py;
+            }
 
-                bowl.setAngle(angle);
+            bowl.setAngle(angle);
 
-                bowl.move((float) px, (float) py);
-                bowl.bringToFront();
+            bowl.move((float) px, (float) py);
+            bowl.bringToFront();
+            bowl.setVisibility(View.VISIBLE);
 
-                if(j+1 == usersCount){
-                    setSelection(j);
-                }
+            if(j+1 == usersCount){
+                setSelection(j);
             }
         }
 
@@ -345,12 +347,15 @@ public class BowlsGroup extends AdapterView<UserBowlAdapter> {
 
                 switch (bowlTouchMode){
                     case DELETE:
-
-                        if(bv.isDeleteReady()){
-                            //TODO: delete
-                        } else {
+                        if(bowlToDelete == null) {
                             bv.prepareDelete();
+                            bowlToDelete = bv;
+                        } else if (bv.equals(bowlToDelete)){
+                            bv.delete();
+                            actions.deleteUser(bv.user);
+                            bowlToDelete = null;
                         }
+
                         break;
 
                     case ASSIGN_TO_ITEM:
